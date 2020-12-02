@@ -1,0 +1,47 @@
+---
+title: "Untitled"
+author: "Jon Aritz Panera y Naiara Santos"
+date: "13/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, eval=FALSE}
+library(Biostrings)
+
+comparaseq <- function(seq1,seq2,tipos,tipoal,M,puntugap,replicas,shuf){
+  puntosdelhisto <- rep(0,N)
+  if (shuf==seq1){ #si la secuencia a la que tenemos que hacer shuffling es la 1
+    for (i in N){ ##hacemos N veces
+    seqaleat <-sample(seq1) ##hacemos el shuffling
+    globalAligns1s2 <- pairwiseAlignment(seq2, seqaleat, substitutionMatrix = M, gapOpening = -2,gapExtension = -8, scoreOnly = TRUE)
+     rep[i]=globalAligns1s2#nos da las dos secuencias que compara y el score
+    } else{
+      for (i in N){ #lo mismo pero con laotra sequencia
+        seqaleat <-sample(seq2)
+        globalAligns1s2 <- pairwiseAlignment(seq1, seqaleat, substitutionMatrix =M, gapOpening = -2,gapExtension = -8, scoreOnly = TRUE)
+        rep[i]=globalAligns1s2
+    }}
+  }
+  ##calculamos la media y la desviacion de estandar para calcular Gumble
+  media = mean(rep)
+  desvi = sd(rep)
+  fx <- dgumbel(rep, media - 0.45*desvi, 1.2825/desvi, log = FALSE)
+  reps <- sort(rep)
+  
+  xmax <- length(rep)
+  ymax <- max(rep)
+  
+  hist(x = rep, main = "Histograma Score", ylab = "Scores", col = "blue")
+  points(xs,fx, type="l", col=2, lwd=2) ##añadir lo de gumble
+  text(xmax, ymax,paste0(seq1,seq2,tipos,tipoal,M,puntugap,replicas,shuf) , adj = c(0.5,-0.15))
+  text(xmax, 0, paste0(media,desvi))
+}
+
+summary(rep)
+
+```
+
